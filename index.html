@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEHDI - Crypto News</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Vazir', Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* انیمیشن اسم MEHDI */
+    h1 {
+      margin: 40px 0 20px;
+      font-size: 4rem;
+      text-align: center;
+    }
+
+    .animate span {
+      display: inline-block;
+      animation: glow 1.5s infinite alternate;
+    }
+
+    .animate span:nth-child(1) { animation-delay: 0s; }
+    .animate span:nth-child(2) { animation-delay: 0.1s; }
+    .animate span:nth-child(3) { animation-delay: 0.2s; }
+    .animate span:nth-child(4) { animation-delay: 0.3s; }
+    .animate span:nth-child(5) { animation-delay: 0.4s; }
+
+    @keyframes glow {
+      from {
+        color: #38bdf8;
+        text-shadow: 0 0 10px #38bdf8;
+      }
+      to {
+        color: #22d3ee;
+        text-shadow: 0 0 30px #22d3ee, 0 0 50px #0ea5e9;
+      }
+    }
+
+    /* کارت قیمت‌ها */
+    .price-card {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      margin: 30px 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    h2 {
+      color: #94a3b8;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-align: right;
+      border-right: 4px solid #38bdf8;
+      padding-right: 15px;
+    }
+
+    .price-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      margin: 10px 0;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 12px;
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .price-item:hover {
+      transform: translateX(-5px);
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .coin-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .coin-name img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .price-value {
+      font-weight: bold;
+      color: #38bdf8;
+    }
+
+    .price-change {
+      font-size: 0.9rem;
+      margin-left: 10px;
+    }
+
+    .positive { color: #4ade80; }
+    .negative { color: #f87171; }
+
+    /* بخش اخبار */
+    .news-list {
+      list-style: none;
+    }
+
+    .news-item {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 15px 0;
+      border: 1px solid rgba(56, 189, 248, 0.1);
+      transition: all 0.3s ease;
+      text-align: right;
+    }
+
+    .news-item:hover {
+      border-color: #38bdf8;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
+    }
+
+    .news-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #f1f5f9;
+    }
+
+    .news-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .news-source {
+      color: #38bdf8;
+    }
+
+    /* وضعیت‌ها */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #94a3b8;
+    }
+
+    .loading::after {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      margin-left: 10px;
+      border: 3px solid #38bdf8;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error {
+      color: #f87171;
+      text-align: center;
+      padding: 20px;
+      background: rgba(248, 113, 113, 0.1);
+      border-radius: 10px;
+    }
+
+    /* فوتر */
+    .footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .update-time {
+      text-align: left;
+      color: #64748b;
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="animate">
+      <span>M</span><span>E</span><span>H</span><span>D</span><span>I</span>
+    </h1>
+
+    <!-- بخش قیمت‌ها -->
+    <div class="price-card">
+      <h2>💰 قیمت لحظه‌ای ارزها</h2>
+      <div id="prices">
+        <div class="loading">در حال دریافت قیمت‌ها...</div>
+      </div>
+    </div>
+
+    <!-- بخش اخبار -->
+    <h2>📰 آخرین اخبار ارز دیجیتال</h2>
+    <ul id="news" class="news-list">
+      <li class="loading">در حال دریافت اخبار...</li>
+    </ul>
+
+    <div class="footer">
+      <p>📡 به‌روزرسانی خودکار هر ۶ ساعت</p>
+      <p>🚀 طراحی شده با ❤️ توسط MEHDI</p>
+    </div>
+  </div>
+
+  <script>
+    // تابع نمایش تاریخ به فارسی
+    function toPersianDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('fa-IR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+    // دریافت قیمت‌ها از CoinGecko
+    async function fetchPrices() {
+      try {
+        const response = await fetch(
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=usd&include_24hr_change=true'
+        );
+        
+        if (!response.ok) throw new Error('خطا در دریافت قیمت‌ها');
+        
+        const data = await response.json();
+        
+        const pricesHtml = `
+          <div class="price-item">
+            <div class="coin-name">
+              <span>₿</span>
+              <span>بیت‌کوین</span>
+            </div>
+            <div>
+              <span class="price-value">$${data.bitcoin.usd.toLocaleString()}</span>
+              <span class="price-change ${data.bitcoin.usd_24h_change >= 0 ? 'positive' : 'negative'}">
+                ${data.bitcoin.usd_24h_change > 0 ? '+' : ''}${data.bitcoin.usd_24h_change.toFixed(2)}%
+              </span>
+            </div>
+          </div>
+          <div class="price-item">
+            <div class="coin-name">
+              <span>Ξ</span>
+              <span>اتریوم</span>
+            </div>
+            <div>
+              <span class="price-value">$${data.ethereum.usd.toLocaleString()}</span>
+              <span class="price-change ${data.ethereum.usd_24h_change >= 0 ? 'positive' : 'negative'}">
+                ${data.ethereum.usd_24h_change > 0 ? '+' : ''}${data.ethereum.usd_24h_change.toFixed(2)}%
+              </span>
+            </div>
+          </div>
+          <div class="price-item">
+            <div class="coin-name">
+              <span>💵</span>
+              <span>تتر</span>
+            </div>
+            <div>
+              <span class="price-value">$${data.tether.usd}</span>
+              <span class="price-change positive">0.00%</span>
+            </div>
+          </div>
+        `;
+        
+        document.getElementById('prices').innerHTML = pricesHtml;
+      } catch (error) {
+        document.getElementById('prices').innerHTML = 
+          '<div class="error">❌ خطا در دریافت قیمت‌ها</div>';
+      }
+    }
+
+    // دریافت اخبار
+    async function fetchNews() {
+      try {
+        const response = await fetch('news.json?' + new Date().getTime()); // اضافه کردن timestamp برای جلوگیری از کش
+        if (!response.ok) throw new Error('خطا در دریافت اخبار');
+        
+        const news = await response.json();
+        
+        const newsHtml = news.map(item => `
+          <li class="news-item">
+            <div class="news-title">${item.title}</div>
+            <div class="news-meta">
+              <span class="news-source">📌 ${item.source}</span>
+              <span>📅 ${toPersianDate(item.date)}</span>
+            </div>
+          </li>
+        `).join('');
+        
+        document.getElementById('news').innerHTML = newsHtml;
+      } catch (error) {
+        document.getElementById('news').innerHTML = 
+          '<li class="error">❌ خطا در دریافت اخبار</li>';
+      }
+    }
+
+    // اجرای توابع
+    fetchPrices();
+    fetchNews();
+
+    // به‌روزرسانی خودکار قیمت‌ها هر ۵ دقیقه
+    setInterval(fetchPrices, 5 * 60 * 1000);
+  </script>
+</body>
+</html>
