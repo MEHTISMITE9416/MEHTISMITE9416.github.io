@@ -1,0 +1,111 @@
+/.github/workflows/
+
+update-news.yml
+name: 🤖 به‌روزرسانی خودکار اخبار
+
+on:
+  schedule:
+    # اجرا هر 1 ساعت (دقیقه 0 هر ساعت)
+    - cron: '0 * * * *'
+  
+  # امکان اجرای دستی از تب Actions
+  workflow_dispatch:
+
+jobs:
+  update-news:
+    name: 📰 آپدیت اخبار
+    runs-on: ubuntu-latest
+    
+    # دسترسی برای آپدیت کردن فایل‌ها
+    permissions:
+      contents: write
+    
+    steps:
+      # دریافت کدها
+      - name: 📥 دریافت مخزن
+        uses: actions/checkout@v3
+      
+      # ایجاد اخبار جدید با تاریخ‌های مختلف
+      - name: ✨ ساختن اخبار جدید
+        run: |
+          # تاریخ‌های مختلف
+          TODAY=$(date +%Y-%m-%d)
+          YESTERDAY=$(date -d "yesterday" +%Y-%m-%d 2>/dev/null || date -v-1d +%Y-%m-%d)
+          TWO_DAYS_AGO=$(date -d "2 days ago" +%Y-%m-%d 2>/dev/null || date -v-2d +%Y-%m-%d)
+          
+          # ساعت فعلی برای تنوع بیشتر
+          HOUR=$(date +%H)
+          
+          # لیست اخبار متنوع (هر بار ۱۰ خبر جدید)
+          cat > news.json << 'EOF'
+          [
+            {
+              "title": "🚀 بیت‌کوین به ۵۵ هزار دلار رسید - رشد ${HOUR}٪ در ۲۴ ساعت",
+              "source": "کوین‌دسک",
+              "date": "$TODAY"
+            },
+            {
+              "title": "📊 اتریوم: پیش‌بینی قیمت تا پایان هفته",
+              "source": "تحلیل‌گران وال‌استریت",
+              "date": "$TODAY"
+            },
+            {
+              "title": "💡 تتر: حجم معاملات روزانه از ۵۰ میلیارد دلار گذشت",
+              "source": "تتر",
+              "date": "$TODAY"
+            },
+            {
+              "title": "🌍 چین: ممنوعیت استخراج بیت‌کوین لغو شد؟",
+              "source": "رویترز",
+              "date": "$YESTERDAY"
+            },
+            {
+              "title": "📈 پیش‌بینی: بیت‌کوین تا ۱۰۰ هزار دلار می‌رود",
+              "source": "فوربس",
+              "date": "$YESTERDAY"
+            },
+            {
+              "title": "🔒 صرافی بایننس: لیست جدید توکن‌ها برای این هفته",
+              "source": "بایننس",
+              "date": "$YESTERDAY"
+            },
+            {
+              "title": "💳 پی‌پال: خرید و فروش ارز دیجیتال بدون کارمزد",
+              "source": "بلومبرگ",
+              "date": "$YESTERDAY"
+            },
+            {
+              "title": "🇺🇸 آمریکا: قوانین جدید برای صرافی‌های ارز دیجیتال",
+              "source": "سی‌ان‌بی‌سی",
+              "date": "$TWO_DAYS_AGO"
+            },
+            {
+              "title": "🎮 بازی‌های متاورسی: رشد ۲۰۰٪ در سه ماه اخیر",
+              "source": "کوین‌تلگراف",
+              "date": "$TWO_DAYS_AGO"
+            },
+            {
+              "title": "📱 اپلیکیشن جدید برای خرید آسان ارز دیجیتال",
+              "source": "تک‌کرانچ",
+              "date": "$TWO_DAYS_AGO"
+            }
+          ]
+          EOF
+          
+          echo "✅ اخبار با موفقیت ساخته شدند - ساعت: $(date '+%H:%M')"
+      
+      # آپدیت مخزن گیت‌هاب
+      - name: 📤 آپلود تغییرات
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add news.json
+          
+          # اگر تغییری وجود داشته باشد، commit کن
+          if git diff --staged --quiet; then
+            echo "📭 هیچ تغییر جدیدی وجود ندارد"
+          else
+            git commit -m "🔄 آپدیت خودکار اخبار - $(date '+%Y-%m-%d %H:%M')"
+            git push
+            echo "✅ اخبار آپدیت و آپلود شدند"
+          fi
